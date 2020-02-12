@@ -1,15 +1,3 @@
-##############################################################################
-#       COPYRIGHT, 2019, Aptiv All Rights reserved
-#       Aptiv Confidential
-###############################################################################
-# %name:
-# created_by:        sjl0gw
-#
-# date_created:      12/2/2020
-# %derived_by:       %
-# %version:          1.0.0
-###############################################################################
-
 import os
 import openpyxl
 
@@ -51,8 +39,7 @@ for i in range(1, maxmium_row + 1 ):
             
             # check for required data mapping
             if line_content.find(Line_Start) != -1 and line_content.find(DataType) != -1 and line_content.find(Line_End) != -1:
-                
-                #found the Implementation data type
+                #found the Implementation data type But flag = 1
                 Found_Datatype_Flag = 1
                 #Get Application Data Type TODO
                 break
