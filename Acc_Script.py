@@ -2,6 +2,8 @@
 import os
 import openpyxl
 
+#Working
+#SW version 2.5
 
 #add folder that contain .arxml file 
 arxml_DataTypes =  "D:\DataTypes.arxml"
