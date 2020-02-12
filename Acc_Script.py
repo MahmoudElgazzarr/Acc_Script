@@ -54,12 +54,13 @@ for i in range(1, maxmium_row + 1 ):
                 Found_Datatype_Flag = 0
                 
         if(Found_Datatype_Flag != 1):
-            print("Couldn't find : "+str(cell_obj.value))
+            print("Couldn't find : "+ str(cell_obj.value))
         
 for i in range(1, maxmium_row + 1 ):
-    for num_line, line_content in enumerate(inFile, 1):
-        if num_line == DataTypes_Found_At_Lines[i] - 1:
-            print(line_content)
+    with open(arxml_DataTypes,'r') as inFile:
+        for num_line, line_content in enumerate(inFile, 1):
+            if num_line == DataTypes_Found_At_Lines[i] - 1:
+                print(line_content)
     
 
 print("Hi It is Working")
