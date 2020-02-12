@@ -1,3 +1,4 @@
+#import libraries being used
 import os
 import openpyxl
 
@@ -21,6 +22,7 @@ sheet_obj = wb_obj.get_sheet_by_name('1D_Tables')
 #get max numbers of rows
 maxmium_row = sheet_obj.max_row
 
+DataTypes_Found_At_Lines = []
 #The Implementation Datatype we are searching for start and end lines
 Line_Start = '<IMPLEMENTATION-DATA-TYPE-REF'
 Line_End = '</IMPLEMENTATION-DATA-TYPE-REF>'
@@ -28,12 +30,13 @@ Line_End = '</IMPLEMENTATION-DATA-TYPE-REF>'
 #for loop for the max number of row in the sheet , serach one by one
 for i in range(1, maxmium_row + 1 ):
     with open(arxml_DataTypes,'r') as inFile:
+        
         #Get Cell object Data
         cell_obj = sheet_obj.cell(row = i, column = 1)
         
         #search in the whole file , Sequencal search Slow $need to be updated to binary search for example
         for num_line, line_content in enumerate(inFile, 1):
-            
+
             #get calibration Parameters from excel sheet
             DataType = 'Idt_' + str(cell_obj.value) + '_struc_T'
             
@@ -41,6 +44,8 @@ for i in range(1, maxmium_row + 1 ):
             if line_content.find(Line_Start) != -1 and line_content.find(DataType) != -1 and line_content.find(Line_End) != -1:
                 #found the Implementation data type But flag = 1
                 Found_Datatype_Flag = 1
+                #Save Line numbers of the found Elements
+                DataTypes_Found_At_Lines.append (num_line)
                 #Get Application Data Type TODO
                 break
 
@@ -50,6 +55,11 @@ for i in range(1, maxmium_row + 1 ):
                 
         if(Found_Datatype_Flag != 1):
             print("Couldn't find : "+str(cell_obj.value))
+        
+for i in range(1, maxmium_row + 1 ):
+    for num_line, line_content in enumerate(inFile, 1):
+        if num_line == DataTypes_Found_At_Lines[i] - 1:
+            print(line_content)
     
 
 print("Hi It is Working")
