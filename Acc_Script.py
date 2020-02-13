@@ -36,6 +36,7 @@ Line_Start = '<IMPLEMENTATION-DATA-TYPE-REF'
 Line_End = '</IMPLEMENTATION-DATA-TYPE-REF>'
 
 DATA_TYPE_MAP_tag = 0
+Current_line_where_is_tag = 0
 
 #Step 1
 #For Loop For The two Columns
@@ -50,14 +51,18 @@ for j in range(1,3):
             for num_line, line_content in enumerate(inFile, 1):
 
                 #get calibration Parameters from excel sheet
-                DataType = 'Idt_' + str(cell_obj.value)
+                DataType = str(cell_obj.value)
                 
                 #search for Data Type Map Tag
                 if line_content.find('<DATA-TYPE-MAP>') != -1 :
                     #Set Data map tag flag to 1
                     DATA_TYPE_MAP_tag = 1
+                    Current_line_where_is_tag = num_line
+                #if three lines passed and couldn't find data remove flag
+                elif(num_line > Current_line_where_is_tag + 3 ) :
+                    DATA_TYPE_MAP_tag = 0
                 # check for required data mapping
-                elif line_content.find(Line_Start) != -1 and line_content.find(DataType) != -1 and line_content.find(Line_End) != -1 and DATA_TYPE_MAP_tag == 1:
+                elif line_content.find(Line_Start) != -1 and line_content.find('Idt_') and line_content.find(DataType) != -1 and line_content.find(Line_End) != -1 and DATA_TYPE_MAP_tag == 1:
                     #found the Implementation data type But flag = 1
                     Found_Datatype_Flag = 1
                     DATA_TYPE_MAP_tag = 0
@@ -118,4 +123,4 @@ for j in range(1,3):
                         sheet_obj.cell(row = i, column = 6).value = App_DataType
                         wb_obj.save(excel_DataTypes)
 #print message that we finished getting Application datatypes
-print("Finished Getting Application Datat types for every implemention Type ")
+print("Finished Getting Application Data types for every implemention Type ")
