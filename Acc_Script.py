@@ -1,3 +1,6 @@
+#This script is being used to extract the Application data type mapping from mapping set
+#For Every implementation data types there is a mapping for application datatype
+
 #import libraries being used
 import os
 import openpyxl
@@ -12,8 +15,8 @@ arxml_DataTypes =  "D:\DataTypes.arxml"
 excel_DataTypes =  "D:/table_info_Data_Stage_B_PATH_3.xlsx"
 
 # Create temp file to copy the arxmls, and edit in the new file 
-data_index = arxml_DataTypes.find("\\")
-new_arxml_DataTypes = arxml_DataTypes[:(data_index)] +"/new_"+arxml_DataTypes[(data_index+1):]
+#data_index = arxml_DataTypes.find("\\")
+#new_arxml_DataTypes = arxml_DataTypes[:(data_index)] +"/new_"+arxml_DataTypes[(data_index+1):]
 
 # workbook object is created 
 wb_obj = openpyxl.load_workbook(excel_DataTypes)
@@ -32,6 +35,8 @@ DataTypes_Found_At_Lines_Second_Column = [0] * maxmium_row
 Line_Start = '<IMPLEMENTATION-DATA-TYPE-REF'
 Line_End = '</IMPLEMENTATION-DATA-TYPE-REF>'
 
+DATA_TYPE_MAP_tag = 0
+
 #Step 1
 #For Loop For The two Columns
 for j in range(1,3):
@@ -47,10 +52,15 @@ for j in range(1,3):
                 #get calibration Parameters from excel sheet
                 DataType = 'Idt_' + str(cell_obj.value)
                 
+                #search for Data Type Map Tag
+                if line_content.find('<DATA-TYPE-MAP>') != -1 :
+                    #Set Data map tag flag to 1
+                    DATA_TYPE_MAP_tag = 1
                 # check for required data mapping
-                if line_content.find(Line_Start) != -1 and line_content.find(DataType) != -1 and line_content.find(Line_End) != -1:
+                elif line_content.find(Line_Start) != -1 and line_content.find(DataType) != -1 and line_content.find(Line_End) != -1 and DATA_TYPE_MAP_tag == 1:
                     #found the Implementation data type But flag = 1
                     Found_Datatype_Flag = 1
+                    DATA_TYPE_MAP_tag = 0
                     if(j == 1):
                         #Save Line numbers of the found Elements in first ROW
                         DataTypes_Found_At_Lines_First_Column.insert (i,num_line)
@@ -107,6 +117,5 @@ for j in range(1,3):
                         #Save to the Excel Sheet Coulmn 5 for X axis
                         sheet_obj.cell(row = i, column = 6).value = App_DataType
                         wb_obj.save(excel_DataTypes)
-    
-
-print("Hi It is Working")
+#print message that we finished getting Application datatypes
+print("Finished Getting Application Datat types for every implemention Type ")
