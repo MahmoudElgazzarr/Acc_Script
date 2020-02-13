@@ -5,7 +5,7 @@ import os
 import openpyxl
 
 #add folder that contain .arxml file 
-Acc_arxml =  "D:/CtAp_ACC.arxml"
+Acc_arxml =  "D:\\CtAp_ACC.arxml"
 
 #add path that contain .xlsx file which have data type
 excel_DataTypes =  "D:/table_info_Data_Stage_B_PATH_3.xlsx"
@@ -21,10 +21,13 @@ wb_obj = openpyxl.load_workbook(excel_DataTypes)
 sheet_obj = wb_obj.get_sheet_by_name('1D_Tables')
 
 #get max numbers of rows
-maxmium_row = sheet_obj.max_row
+#maxmium_row = sheet_obj.max_row
+maxmium_row = 80
 
 #Line Start
 Line_Start = '<TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">'
+#Middle Line
+Middle_Line = 'Cal_Datatype'
 #Line End
 Line_End = '</TYPE-TREF>'
 
@@ -41,14 +44,26 @@ for j in range(1,3):
                 #get calibration Parameters from excel sheet
                 DataType = str(cell_obj.value)
                 #search for Implementation line
-                if line_content.find(Line_Start) != -1 and line_content.find('Idt_') and line_content.find(DataType) and line_content.find(Line_End):
+                if line_content.find(Line_Start) != -1 and line_content.find(Middle_Line) and line_content.find('Idt_') !=-1 and line_content.find(DataType) != -1 and line_content.find(Line_End) != -1:
                     #get How many spaces before the line
                     X_Spaces = line_content.find("<TYPE")
                     #variable to hold the number of spaces
                     Spaces = line_content[:(X_Spaces)]
-                    Application_Type = str(sheet_obj.cell(row = i, column = j + 4))
-                    line_content = line_content.replace(Spaces + '<TYPE-TREF DEST="APPLICATION-PRIMITIVE-DATA-TYPE">/Package_Autocode/Data_Type/Application_Types/'+ Application_Type + '</TYPE-TREF>')
-                # Write the line after edits "if needed" in new file     
+                    #get application Type
+                    Application_Type = str(sheet_obj.cell(row = i, column = j + 4).value)
+                    #replace line contenet with the new line must be not none
+                    if (Application_Type != 'None'):
+                        
+                        X = line_content.find('Idt_')
+                        Y = line_content.find('_T')
+                        #rename implementation to Application
+                        line_content = line_content.replace(line_content[X:(Y+2)], Application_Type)
+                        #Change other headers
+                        line_content = line_content.replace('"IMPLEMENTATION-DATA-TYPE">' , '"APPLICATION-PRIMITIVE-DATA-TYPE">')
+                        line_content = line_content.replace('ComponentType/CtAp_ACC/Cal_Datatype/','Data_Type/Application_Types/')
+                        #print Final line
+                        print(line_content)
+                # Write the line after edits "if needed" in new file
                 new_file.write(line_content)
             #close and save temp file         
             new_file.close()
