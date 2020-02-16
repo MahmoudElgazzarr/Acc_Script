@@ -31,9 +31,14 @@ Middle_Line = 'Cal_Datatype'
 #Line End
 Line_End = '</TYPE-TREF>'
 
-for j in range(1,3):
+#Changed Lines Numbers
+Changed_list_Lines = [0] * maxmium_row
+
+flag = 1
+
+for j in range(1,2):
     #for loop for the max number of row in the sheet , serach one by one
-    for i in range(1, maxmium_row + 1 ):
+    for i in range(1, maxmium_row):
         #Copy ACC File Line by Line
         new_file = open(new_Acc_arxml,'w')
         with open(Acc_arxml,'r') as inFile:
@@ -43,7 +48,7 @@ for j in range(1,3):
             for num_line, line_content in enumerate(inFile, 1):
                 #get calibration Parameters from excel sheet
                 DataType = str(cell_obj.value)
-                #search for Implementation line
+                #search for Implementation cal line
                 if line_content.find(Line_Start) != -1 and line_content.find(Middle_Line) and line_content.find('Idt_') !=-1 and line_content.find(DataType) != -1 and line_content.find(Line_End) != -1:
                     #get How many spaces before the line
                     X_Spaces = line_content.find("<TYPE")
@@ -53,7 +58,7 @@ for j in range(1,3):
                     Application_Type = str(sheet_obj.cell(row = i, column = j + 4).value)
                     #replace line contenet with the new line must be not none
                     if (Application_Type != 'None'):
-                        
+                        #get place of cal implementation type
                         X = line_content.find('Idt_')
                         Y = line_content.find('_T')
                         #rename implementation to Application
@@ -63,8 +68,14 @@ for j in range(1,3):
                         line_content = line_content.replace('ComponentType/CtAp_ACC/Cal_Datatype/','Data_Type/Application_Types/')
                         #print Final line
                         print(line_content)
-                # Write the line after edits "if needed" in new file
-                new_file.write(line_content)
-            #close and save temp file         
-            new_file.close()
+                        #Save Changed Line Number
+                        Changed_list_Lines.insert(i,num_line)
+                        # Write the line after edits "if needed" in new file
+                        new_file.write(line_content)
+                        new_file.close()
+                #else:
+                    # Write the line after edits "if needed" in new file
+                    #new_file.write(line_content)
+        #close and save temp file         
+        new_file.close()
 print("Renaming Completed Successfully")
