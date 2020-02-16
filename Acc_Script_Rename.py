@@ -5,14 +5,14 @@ import os
 import openpyxl
 
 #add folder that contain .arxml file 
-Acc_arxml =  "D:\\CtAp_ACC.arxml"
+Input_arxml =  "D:\\CtAp_ACC.arxml"
 
 #add path that contain .xlsx file which have data type
 excel_DataTypes =  "D:/table_info_Data_Stage_B_PATH_3.xlsx"
 
 # Create temp file to copy the arxmls, and edit in the new file 
-data_index = Acc_arxml.find("\\")
-new_Acc_arxml = Acc_arxml[:(data_index)] +"/new_"+Acc_arxml[(data_index+1):]
+data_index = Input_arxml.find("\\")
+new_Input_arxml = Input_arxml[:(data_index)] +"/new_"+Input_arxml[(data_index+1):]
 
 # workbook object is created 
 wb_obj = openpyxl.load_workbook(excel_DataTypes)
@@ -22,6 +22,11 @@ sheet_obj = wb_obj.get_sheet_by_name('1D_Tables')
 
 #get max numbers of rows
 #maxmium_row = sheet_obj.max_row
+
+#Start Row
+Start_Row = 1
+
+#Todo This is the max number for Acc SWC , need to be changed according to each SWC or create an excel sheet for each swc
 maxmium_row = 80
 
 #Line Start
@@ -36,15 +41,15 @@ Changed_list_Lines = [0] * maxmium_row
 
 flag = 1
 
-new_file = open(new_Acc_arxml,'w')
-with open(Acc_arxml,'r') as inFile:
+new_file = open(new_Input_arxml,'w')
+with open(new_Input_arxml,'r') as inFile:
     #search in the whole file , Sequencal search Slow $need to be updated to binary search for example
     for num_line, line_content in enumerate(inFile, 1):
         #Copy ACC File Line by Line
         
         for j in range(1,2):
             #for loop for the max number of row in the sheet , serach one by one
-            for i in range(1, maxmium_row):
+            for i in range(Start_Row , maxmium_row):
                 #Get Cell object Data
                 cell_obj = sheet_obj.cell(row = i, column = j)
                 #get calibration Parameters from excel sheet

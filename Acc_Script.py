@@ -1,6 +1,10 @@
 #This script is being used to extract the Application data type mapping from mapping set
 #For Every implementation data types there is a mapping for application datatype
 
+#input: Excel Sheet Where the first and second coulmn contaion the calibration parameters
+#output : Fill Coulumn 5 and 6 with the Application datatypes
+#output : Fill Coulumn 7 and 8 with Implementation datatypes
+
 #import libraries being used
 import os
 import openpyxl
@@ -69,10 +73,24 @@ for j in range(1,3):
                     if(j == 1):
                         #Save Line numbers of the found Elements in first ROW
                         DataTypes_Found_At_Lines_First_Column.insert (i,num_line)
+                        #search for the place of implementation in the line itself
+                        X = line_content.find('Implementation_Types/')
+                        Y = line_content.find('</IMPLEMENTATION-DATA-TYPE-REF>')
+                        #assign value to it
+                        Implementation_Types = line_content[X + 21 : Y]
+                        #write the Implemenation datatype to the correct column in the excel sheet
+                        sheet_obj.cell(row = i, column = 7).value = Implementation_Types
                         break
                     if(j == 2):
+                        #Save Line numbers of the found Elements in first ROW
                         DataTypes_Found_At_Lines_Second_Column.insert (i,num_line)
-                        #print('i and j values are =' ,i,j)
+                        #search for the place of implementation in the line itself
+                        X = line_content.find('Implementation_Types/')
+                        Y = line_content.find('</IMPLEMENTATION-DATA-TYPE-REF>')
+                        #assign value to it
+                        Implementation_Types = line_content[X + 21 : Y]
+                        #write the Implemenation datatype to the correct column in the excel sheet
+                        sheet_obj.cell(row = i, column = 8).value = Implementation_Types
                         break
 
                 #couldn't found the calibartion implementation data set    
