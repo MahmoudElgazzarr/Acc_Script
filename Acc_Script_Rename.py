@@ -36,16 +36,17 @@ Changed_list_Lines = [0] * maxmium_row
 
 flag = 1
 
-for j in range(1,2):
-    #for loop for the max number of row in the sheet , serach one by one
-    for i in range(1, maxmium_row):
+new_file = open(new_Acc_arxml,'w')
+with open(Acc_arxml,'r') as inFile:
+    #search in the whole file , Sequencal search Slow $need to be updated to binary search for example
+    for num_line, line_content in enumerate(inFile, 1):
         #Copy ACC File Line by Line
-        new_file = open(new_Acc_arxml,'w')
-        with open(Acc_arxml,'r') as inFile:
-            #Get Cell object Data
-            cell_obj = sheet_obj.cell(row = i, column = j)
-            #search in the whole file , Sequencal search Slow $need to be updated to binary search for example
-            for num_line, line_content in enumerate(inFile, 1):
+        
+        for j in range(1,2):
+            #for loop for the max number of row in the sheet , serach one by one
+            for i in range(1, maxmium_row):
+                #Get Cell object Data
+                cell_obj = sheet_obj.cell(row = i, column = j)
                 #get calibration Parameters from excel sheet
                 DataType = str(cell_obj.value)
                 #search for Implementation cal line
@@ -68,14 +69,8 @@ for j in range(1,2):
                         line_content = line_content.replace('ComponentType/CtAp_ACC/Cal_Datatype/','Data_Type/Application_Types/')
                         #print Final line
                         print(line_content)
-                        #Save Changed Line Number
-                        Changed_list_Lines.insert(i,num_line)
-                        # Write the line after edits "if needed" in new file
-                        new_file.write(line_content)
-                        new_file.close()
-                #else:
-                    # Write the line after edits "if needed" in new file
-                    #new_file.write(line_content)
-        #close and save temp file         
-        new_file.close()
+        # Write the line after edits "if needed" in new file
+        new_file.write(line_content)
+    #close and save temp file         
+    new_file.close()
 print("Renaming Completed Successfully")
