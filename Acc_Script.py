@@ -74,10 +74,10 @@ for j in range(1,3):
                         #Save Line numbers of the found Elements in first ROW
                         DataTypes_Found_At_Lines_First_Column.insert (i,num_line)
                         #search for the place of implementation in the line itself
-                        X = line_content.find('Cal_Datatype/')
+                        X = line_content.find('Idt_')
                         Y = line_content.find('</IMPLEMENTATION-DATA-TYPE-REF>')
                         #assign value to it
-                        Implementation_Types = line_content[X + 13 : Y]
+                        Implementation_Types = line_content[X : Y]
                         #write the Implemenation datatype to the correct column in the excel sheet Column 7
                         sheet_obj.cell(row = i, column = 7).value = Implementation_Types
                         break
@@ -85,10 +85,10 @@ for j in range(1,3):
                         #Save Line numbers of the found Elements in first ROW
                         DataTypes_Found_At_Lines_Second_Column.insert (i,num_line)
                         #search for the place of implementation in the line itself
-                        X = line_content.find('Cal_Datatype/')
+                        X = line_content.find('Idt_')
                         Y = line_content.find('</IMPLEMENTATION-DATA-TYPE-REF>')
                         #assign value to it
-                        Implementation_Types = line_content[X + 13 : Y]
+                        Implementation_Types = line_content[X : Y]
                         #write the Implemenation datatype to the correct column in the excel sheet coulmn 8
                         sheet_obj.cell(row = i, column = 8).value = Implementation_Types
                         break
@@ -141,4 +141,4 @@ for j in range(1,3):
                         sheet_obj.cell(row = i, column = 6).value = App_DataType
                         wb_obj.save(excel_DataTypes)
 #print message that we finished getting Application datatypes
-print("Finished Getting Application Data types for every implemention Type ")
+print("Finished Getting Application Data types for every Calibration ")
