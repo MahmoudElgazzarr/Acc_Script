@@ -74,22 +74,22 @@ for j in range(1,3):
                         #Save Line numbers of the found Elements in first ROW
                         DataTypes_Found_At_Lines_First_Column.insert (i,num_line)
                         #search for the place of implementation in the line itself
-                        X = line_content.find('Implementation_Types/')
+                        X = line_content.find('Cal_Datatype/')
                         Y = line_content.find('</IMPLEMENTATION-DATA-TYPE-REF>')
                         #assign value to it
-                        Implementation_Types = line_content[X + 21 : Y]
-                        #write the Implemenation datatype to the correct column in the excel sheet
+                        Implementation_Types = line_content[X + 13 : Y]
+                        #write the Implemenation datatype to the correct column in the excel sheet Column 7
                         sheet_obj.cell(row = i, column = 7).value = Implementation_Types
                         break
                     if(j == 2):
                         #Save Line numbers of the found Elements in first ROW
                         DataTypes_Found_At_Lines_Second_Column.insert (i,num_line)
                         #search for the place of implementation in the line itself
-                        X = line_content.find('Implementation_Types/')
+                        X = line_content.find('Cal_Datatype/')
                         Y = line_content.find('</IMPLEMENTATION-DATA-TYPE-REF>')
                         #assign value to it
-                        Implementation_Types = line_content[X + 21 : Y]
-                        #write the Implemenation datatype to the correct column in the excel sheet
+                        Implementation_Types = line_content[X + 13 : Y]
+                        #write the Implemenation datatype to the correct column in the excel sheet coulmn 8
                         sheet_obj.cell(row = i, column = 8).value = Implementation_Types
                         break
 
