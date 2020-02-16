@@ -42,11 +42,10 @@ Changed_list_Lines = [0] * maxmium_row
 flag = 1
 
 new_file = open(new_Input_arxml,'w')
-with open(new_Input_arxml,'r') as inFile:
+with open(Input_arxml,'r') as inFile:
     #search in the whole file , Sequencal search Slow $need to be updated to binary search for example
     for num_line, line_content in enumerate(inFile, 1):
         #Copy ACC File Line by Line
-        
         for j in range(1,2):
             #for loop for the max number of row in the sheet , serach one by one
             for i in range(Start_Row , maxmium_row):
@@ -66,9 +65,9 @@ with open(new_Input_arxml,'r') as inFile:
                     if (Application_Type != 'None'):
                         #get place of cal implementation type
                         X = line_content.find('Idt_')
-                        Y = line_content.find('_T')
+                        Y = line_content.find('</TYPE-TREF>')
                         #rename implementation to Application
-                        line_content = line_content.replace(line_content[X:(Y+2)], Application_Type)
+                        line_content = line_content.replace(line_content[X:Y], Application_Type)
                         #Change other headers
                         line_content = line_content.replace('"IMPLEMENTATION-DATA-TYPE">' , '"APPLICATION-PRIMITIVE-DATA-TYPE">')
                         line_content = line_content.replace('ComponentType/CtAp_ACC/Cal_Datatype/','Data_Type/Application_Types/')
