@@ -5,10 +5,10 @@ import os
 import openpyxl
 
 #add folder that contain .arxml file 
-Input_arxml =  "D:\\CtAp_ACC.arxml"
+Input_arxml =  "D:\\CtAp_LKS.arxml"
 
 #add path that contain .xlsx file which have data type
-excel_DataTypes =  "D:/table_info_Data_Stage_B_PATH_3.xlsx"
+excel_DataTypes =  "D:\Acc_Path1/table_info_Data_Stage_L_PATH_1.xlsx"
 
 # Create temp file to copy the arxmls, and edit in the new file 
 data_index = Input_arxml.find("\\")
@@ -24,10 +24,10 @@ sheet_obj = wb_obj.get_sheet_by_name('1D_Tables')
 #maxmium_row = sheet_obj.max_row
 
 #Start Row
-Start_Row = 1
+Start_Row = 144
 
 #Todo This is the max number for Acc SWC , need to be changed according to each SWC or create an excel sheet for each swc
-maxmium_row = 80
+maxmium_row = 168
 
 #Line Start
 Line_Start = '<TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">'
@@ -50,24 +50,29 @@ with open(Input_arxml,'r') as inFile:
             #for loop for the max number of row in the sheet , serach one by one
             for i in range(Start_Row , maxmium_row):
                 #Get Cell object Data
-                cell_obj = sheet_obj.cell(row = i, column = j)
-                #get calibration Parameters from excel sheet
-                DataType = str(cell_obj.value)
+                cell_obj = sheet_obj.cell(row = i, column = j + 6 )
+                #get Implementation Parameters from excel sheet
+                Imp_DataType = str(cell_obj.value)
+                #get Cal Parameters from excel sheet
+                Cal_obj = sheet_obj.cell(row = i, column = j )
+                #get Cal Name
+                Cal_Name = str(Cal_obj.value)
                 #search for Implementation cal line
-                if line_content.find(Line_Start) != -1 and line_content.find(Middle_Line) and line_content.find('Idt_') !=-1 and line_content.find(DataType) != -1 and line_content.find(Line_End) != -1:
-                    #get How many spaces before the line
-                    X_Spaces = line_content.find("<TYPE")
-                    #variable to hold the number of spaces
-                    Spaces = line_content[:(X_Spaces)]
+                if line_content.find('<SHORT-NAME>'+Cal_Name+'</SHORT-NAME>') != -1:
+                    Cal_Name_Found_Flag  = 1
+                    #print (line_content)
+                if line_content.find('</PARAMETER-DATA-PROTOTYPE>'):
+                    Cal_Name_Found_Flag = 0
+                #replace
+                if line_content.find(Line_Start) != -1 and line_content.find(Middle_Line) and line_content.find('Idt_') !=-1 and line_content.find(Imp_DataType) != -1 and line_content.find(Line_End) != -1 and Cal_Name_Found_Flag == 1 :
+                    #Set Flag back to zero
+                    Cal_Name_Found_Flag = 0
                     #get application Type
                     Application_Type = str(sheet_obj.cell(row = i, column = j + 4).value)
                     #replace line contenet with the new line must be not none
                     if (Application_Type != 'None'):
-                        #get place of cal implementation type
-                        X = line_content.find('Idt_')
-                        Y = line_content.find('</TYPE-TREF>')
                         #rename implementation to Application
-                        line_content = line_content.replace(line_content[X:Y], Application_Type)
+                        line_content = line_content.replace(Imp_DataType, Application_Type)
                         #Change other headers
                         line_content = line_content.replace('"IMPLEMENTATION-DATA-TYPE">' , '"APPLICATION-PRIMITIVE-DATA-TYPE">')
                         line_content = line_content.replace('ComponentType/CtAp_ACC/Cal_Datatype/','Data_Type/Application_Types/')
