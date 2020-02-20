@@ -6,7 +6,7 @@ import openpyxl
 
 
 #add folder that contain .arxml file 
-Input_arxml =  "D:/Workspaces/RTE_Workspace/aptiv_sw/autosar_cfg/davinci/Config/Developer/ComponentTypes\\CtAp_TSR.arxml"
+Input_arxml =  "D:/Workspaces/RTE_Workspace/aptiv_sw/autosar_cfg/davinci/Config/Developer/ComponentTypes\\CtAp_ACC.arxml"
 
 #add path that contain .xlsx file which have data type
 excel_DataTypes =  "D:\Acc_Path1/table_info_Data_Stage_L_PATH_1.xlsx"
@@ -25,10 +25,10 @@ sheet_obj = wb_obj.get_sheet_by_name('1D_Tables')
 #maxmium_row = sheet_obj.max_row
 
 #Start Row
-Start_Row = 345
+Start_Row = 1
 
-#Todo This is the max number for Acc SWC , need to be changed according to each SWC or create an excel sheet for each swc
-maxmium_row = 382
+#Maxmium Row + 1
+maxmium_row = 81
 
 #Line Start
 Line_Start = '<TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">'
@@ -83,4 +83,11 @@ with open(Input_arxml,'r') as inFile:
         new_file.write(line_content)
     #close and save temp file         
     new_file.close()
+
+# remove the orignal file to replace the new one with it   
+os.remove(Input_arxml)
+# rename the new file to have the same name of the orignal one 
+os.rename(Input_arxml,new_Input_arxml)
+
+#Done
 print("Renaming Completed Successfully")
