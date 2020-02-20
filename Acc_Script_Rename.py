@@ -87,7 +87,7 @@ with open(Input_arxml,'r') as inFile:
 # remove the orignal file to replace the new one with it   
 os.remove(Input_arxml)
 # rename the new file to have the same name of the orignal one 
-os.rename(Input_arxml,new_Input_arxml)
+os.rename(new_Input_arxml,Input_arxml)
 
 #Done
 print("Renaming Completed Successfully")
