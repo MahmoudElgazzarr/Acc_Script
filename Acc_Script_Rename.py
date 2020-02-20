@@ -5,7 +5,7 @@ import os
 import openpyxl
 
 #add folder that contain .arxml file 
-Input_arxml =  "D:\\CtAp_LKS.arxml"
+Input_arxml =  "D:\\CtAp_FCW.arxml"
 
 #add path that contain .xlsx file which have data type
 excel_DataTypes =  "D:\Acc_Path1/table_info_Data_Stage_L_PATH_1.xlsx"
@@ -24,10 +24,10 @@ sheet_obj = wb_obj.get_sheet_by_name('1D_Tables')
 #maxmium_row = sheet_obj.max_row
 
 #Start Row
-Start_Row = 144
+Start_Row = 196
 
 #Todo This is the max number for Acc SWC , need to be changed according to each SWC or create an excel sheet for each swc
-maxmium_row = 168
+maxmium_row = 220
 
 #Line Start
 Line_Start = '<TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">'
@@ -61,8 +61,6 @@ with open(Input_arxml,'r') as inFile:
                 if line_content.find('<SHORT-NAME>'+Cal_Name+'</SHORT-NAME>') != -1:
                     Cal_Name_Found_Flag  = 1
                     #print (line_content)
-                if line_content.find('</PARAMETER-DATA-PROTOTYPE>'):
-                    Cal_Name_Found_Flag = 0
                 #replace
                 if line_content.find(Line_Start) != -1 and line_content.find(Middle_Line) and line_content.find('Idt_') !=-1 and line_content.find(Imp_DataType) != -1 and line_content.find(Line_End) != -1 and Cal_Name_Found_Flag == 1 :
                     #Set Flag back to zero
@@ -78,6 +76,8 @@ with open(Input_arxml,'r') as inFile:
                         line_content = line_content.replace('ComponentType/CtAp_ACC/Cal_Datatype/','Data_Type/Application_Types/')
                         #print Final line
                         print(line_content)
+                if line_content.find('</PARAMETER-DATA-PROTOTYPE>') != -1:
+                    Cal_Name_Found_Flag = 0
         # Write the line after edits "if needed" in new file
         new_file.write(line_content)
     #close and save temp file         
