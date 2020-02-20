@@ -4,8 +4,9 @@
 import os
 import openpyxl
 
+
 #add folder that contain .arxml file 
-Input_arxml =  "D:\\CtAp_FCW.arxml"
+Input_arxml =  "D:/Workspaces/RTE_Workspace/aptiv_sw/autosar_cfg/davinci/Config/Developer/ComponentTypes\\CtAp_TSR.arxml"
 
 #add path that contain .xlsx file which have data type
 excel_DataTypes =  "D:\Acc_Path1/table_info_Data_Stage_L_PATH_1.xlsx"
@@ -24,10 +25,10 @@ sheet_obj = wb_obj.get_sheet_by_name('1D_Tables')
 #maxmium_row = sheet_obj.max_row
 
 #Start Row
-Start_Row = 196
+Start_Row = 345
 
 #Todo This is the max number for Acc SWC , need to be changed according to each SWC or create an excel sheet for each swc
-maxmium_row = 220
+maxmium_row = 382
 
 #Line Start
 Line_Start = '<TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">'
