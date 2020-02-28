@@ -26,7 +26,7 @@ excel_DataTypes =  "D:/table_info_Data_Stage_B_PATH_3.xlsx"
 wb_obj = openpyxl.load_workbook(excel_DataTypes)
 
 #create Sheet object
-sheet_obj = wb_obj.get_sheet_by_name('1D_Tables')
+sheet_obj = wb_obj.get_sheet_by_name('2D_Tables')
 
 #get max numbers of rows
 maxmium_row = sheet_obj.max_row
@@ -34,6 +34,7 @@ maxmium_row = sheet_obj.max_row
 #declare a list to save lines number in it , initalize by zeros
 DataTypes_Found_At_Lines_First_Column = [0] * maxmium_row
 DataTypes_Found_At_Lines_Second_Column = [0] * maxmium_row
+DataTypes_Found_At_Lines_Third_Column = [0] * maxmium_row
 
 #The Implementation Datatype we are searching for start and end lines
 Line_Start = '<IMPLEMENTATION-DATA-TYPE-REF'
@@ -44,7 +45,7 @@ Current_line_where_is_tag = 0
 
 #Step 1
 #For Loop For The two Columns
-for j in range(1,3):
+for j in range(1,4):
     #for loop for the max number of row in the sheet , serach one by one
     for i in range(1, maxmium_row + 1 ):
         with open(arxml_DataTypes,'r') as inFile:
@@ -79,7 +80,7 @@ for j in range(1,3):
                         #assign value to it
                         Implementation_Types = line_content[X : Y]
                         #write the Implemenation datatype to the correct column in the excel sheet Column 7
-                        sheet_obj.cell(row = i, column = 7).value = Implementation_Types
+                        sheet_obj.cell(row = i, column = 8).value = Implementation_Types
                         break
                     if(j == 2):
                         #Save Line numbers of the found Elements in first ROW
@@ -90,8 +91,20 @@ for j in range(1,3):
                         #assign value to it
                         Implementation_Types = line_content[X : Y]
                         #write the Implemenation datatype to the correct column in the excel sheet coulmn 8
-                        sheet_obj.cell(row = i, column = 8).value = Implementation_Types
+                        sheet_obj.cell(row = i, column = 9).value = Implementation_Types
                         break
+                    if(j == 3):
+                        #Save Line numbers of the found Elements in first ROW
+                        DataTypes_Found_At_Lines_Third_Column.insert (i,num_line)
+                        #search for the place of implementation in the line itself
+                        X = line_content.find('Idt_')
+                        Y = line_content.find('</IMPLEMENTATION-DATA-TYPE-REF>')
+                        #assign value to it
+                        Implementation_Types = line_content[X : Y]
+                        #write the Implemenation datatype to the correct column in the excel sheet coulmn 8
+                        sheet_obj.cell(row = i, column = 10).value = Implementation_Types
+                        break
+
 
                 #couldn't found the calibartion implementation data set    
                 else:
@@ -106,7 +119,7 @@ print(DataTypes_Found_At_Lines_Second_Column)
 
 #Complete Step 1
 #Get Application Data Type
-for j in range(1,3):
+for j in range(1,4):
     #For Loop for the number of rows
     for i in range(1, maxmium_row + 1 ):
         with open(arxml_DataTypes,'r') as inFile:
@@ -140,5 +153,19 @@ for j in range(1,3):
                         #Save to the Excel Sheet Coulmn 5 for X axis
                         sheet_obj.cell(row = i, column = 6).value = App_DataType
                         wb_obj.save(excel_DataTypes)
+                if j == 3:
+                    #we know the lines so we get the data
+                    if num_line == DataTypes_Found_At_Lines_Third_Column[i] - 1 and DataTypes_Found_At_Lines_Third_Column[i] != 0 :
+                        #Subtaract Application datatype from Line content
+                        X = line_content.find('Application_Types/')
+                        Y = line_content.find('</APPLICATION-DATA-TYPE-REF>')
+                        #Get AppDataType for line
+                        App_DataType = line_content[X + 18 : Y]
+                        #print Application datatype
+                        #print(App_DataType)
+                        #Save to the Excel Sheet Coulmn 5 for X axis
+                        sheet_obj.cell(row = i, column = 7).value = App_DataType
+                        wb_obj.save(excel_DataTypes)
+
 #print message that we finished getting Application datatypes
 print("Finished Getting Application Data types for every Calibration ")
