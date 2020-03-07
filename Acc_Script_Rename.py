@@ -72,6 +72,15 @@ def main():
                             #if found the the Cal Name
                             if line_content.find('<SHORT-NAME>'+Cal_Name+'</SHORT-NAME>') != -1:
                                 Cal_Name_Found_Flag  = 1
+
+                            #if Line was already Changed
+                            if (line_content.find(Application_Type) != -1) and (Cal_Name_Found_Flag == 1) :
+                                    #Write Done To Excel Sheet
+                                    Write_Value_To_Cell(Sheet_object , row , Column + 10 , 'Done' )
+                                    #Color Cell with Green
+                                    Color_Cell_Green(Sheet_object , row , Column + 10)
+                                    #Save WorkObject "Excel Sheet After Edits"
+                                    Workbook_Object.save(excel_DataTypes)
                             #Replace
                             if (line_content.find(Imp_DataType) != -1) and (Cal_Name_Found_Flag == 1) :
                                 if (Application_Type != 'None'):
