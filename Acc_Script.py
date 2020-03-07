@@ -44,11 +44,6 @@ Line_End = '</IMPLEMENTATION-DATA-TYPE-REF>'
 DATA_TYPE_MAP_tag = 0
 Current_line_where_is_tag = 0
 
-pinkfill = PatternFill(fill_type=None,start_color='F2DCDB',end_color='F2DCDB')
-sheet_obj['A1'].fill = pinkfill
-sheet_obj['A2'].fill = pinkfill
-sheet_obj['A3'].fill = pinkfill
-
 #Step 1
 #For Loop For The two Columns
 for j in range(1,3):

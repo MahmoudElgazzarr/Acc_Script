@@ -1,11 +1,18 @@
 #This script is being used to Rename Implementation data type to Application data Type
+#input Excel Sheet must be Like :
+#First Three Coulmns contains X , Y , Z Cals
+#Fourth column contains SWC Name , Must match the file path name
+
+#output :
+#All Done Rows Will be Mapped to Done 
+#Files will be changed
 
 #import libraries being used
 import os
 import openpyxl
 import glob
 
-#add folder that contain .arxml file 
+#add folder that contain .arxml files
 SWC_Arxmls = "D:/Avelabs/Ford_Dat2.1/aptiv_sw/autosar_cfg/davinci/Config/Developer/ComponentTypes/*.arxml"
 
 #Get All Paths for Arxmls in the folder
@@ -24,17 +31,16 @@ Middle_Line = 'Cal_Datatype'
 #Line End
 Line_End = '</TYPE-TREF>'
 
-Idt_Found = 0
 #Global variable to hold column number
-Columns = 0
+Column = 0
 #Global Variable to hold row number
-rows = 0
-
-flag = 1
+row = 0
 
 def main():
+    #Load WorkBook
+    Workbook_Object = Load_Workbook(excel_DataTypes)
     # workbook object is created , create Sheet object
-    Sheet_object = Load_Sheet(excel_DataTypes , '1D_Tables')
+    Sheet_object = Load_Sheet(Workbook_Object , '1D_Tables')
     #get max numbers of rows
     maxmium_row = Get_Max_Row(Sheet_object) + 1
     #Todo Change to 4 in case of 3D Cals
@@ -60,7 +66,7 @@ def main():
                     #open the old file
                     with open(SWC_arxml,'r') as inFile:
                         #Search in the whole file
-                        for num_line, line_content in enumerate(inFile, 1):
+                        for num_line , line_content in enumerate(inFile, 1):
                             #if found the the Cal Name
                             if line_content.find('<SHORT-NAME>'+Cal_Name+'</SHORT-NAME>') != -1:
                                 Cal_Name_Found_Flag  = 1
@@ -75,9 +81,9 @@ def main():
                                     Component_End_in_line = line_content.find('Cal_Datatype/')
                                     line_content = line_content.replace(line_content[Component_Start_in_line : Component_End_in_line + 13 ],'Data_Type/Application_Types/')
                                     #Write Done To Excel Sheet
-                                    Write_Value_To_Cell(Sheet_object , row , Column + 15 , 'Done' )
-                                    #Write To new file only changed iterms
-                                    #new_file.write(line_content)
+                                    Write_Value_To_Cell(Sheet_object , row , Column + 10 , 'Done' )
+                                    #Save WorkObject "Excel Sheet After Edits"
+                                    Workbook_Object.save(excel_DataTypes)
                                     #Print Line in Console
                                     print(line_content)
                             #Found Tag Closing
@@ -87,25 +93,26 @@ def main():
                             new_file.write(line_content)
                     #Close the File after Edits
                     new_file.close()
+                    #Copt New File to the old file every Line Change
                     Copy_File_Content(new_SWC_arxml , SWC_arxml )
-
                     # remove the orignal file to replace the new one with it   
-                    #os.remove(SWC_arxml)
+                    os.remove(SWC_arxml)
                     # rename the new file to have the same name of the orignal one 
-                    #os.rename(new_SWC_arxml,SWC_arxml)
+                    os.rename(new_SWC_arxml,SWC_arxml)
     #Done
     print("Renaming Completed Successfully")
 
 
+#####Local Functions
 
-
-
-
+#Function To Load WorkBook and Return Work Book Object
+def Load_Workbook(Input_Path):
+    Workbook_Obj = openpyxl.load_workbook(Input_Path)
+    return Workbook_Obj
 
 #Function that takes input path , sheet name , and create a object from the sheet
-def Load_Sheet(Input_Path , Sheet_Name):
-    wb_obj = openpyxl.load_workbook(Input_Path)
-    Sheet_Object = wb_obj.get_sheet_by_name(Sheet_Name)
+def Load_Sheet( Workbook_Object , Sheet_Name):
+    Sheet_Object = Workbook_Object.get_sheet_by_name(Sheet_Name)
     return Sheet_Object
 
 #function that takes a sheet object and return max row
@@ -122,8 +129,7 @@ def Get_Value_Of_Cell(sheet_obj , row , column):
 
 #write value to any cell in the excel sheet
 def Write_Value_To_Cell(sheet_obj , row , column , value):
-    Cell_obj = sheet_obj.cell(row = row , column = column)
-    Cell_obj.value = value
+    sheet_obj.cell(row = row , column = column).value = value
 
 #Function that copies All contenet of a file and copies to an other file
 def Copy_File_Content(src , dest):
