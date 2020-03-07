@@ -11,6 +11,8 @@
 import os
 import openpyxl
 import glob
+from openpyxl.styles import Color, PatternFill, Font, Border
+from openpyxl.styles import colors
 
 #add folder that contain .arxml files
 SWC_Arxmls = "D:/Avelabs/Ford_Dat2.1/aptiv_sw/autosar_cfg/davinci/Config/Developer/ComponentTypes/*.arxml"
@@ -70,6 +72,15 @@ def main():
                             #if found the the Cal Name
                             if line_content.find('<SHORT-NAME>'+Cal_Name+'</SHORT-NAME>') != -1:
                                 Cal_Name_Found_Flag  = 1
+
+                            #if Line was already Changed
+                            if (line_content.find(Application_Type) != -1) and (Cal_Name_Found_Flag == 1) :
+                                    #Write Done To Excel Sheet
+                                    Write_Value_To_Cell(Sheet_object , row , Column + 10 , 'Done' )
+                                    #Color Cell with Green
+                                    Color_Cell_Green(Sheet_object , row , Column + 10)
+                                    #Save WorkObject "Excel Sheet After Edits"
+                                    Workbook_Object.save(excel_DataTypes)
                             #Replace
                             if (line_content.find(Imp_DataType) != -1) and (Cal_Name_Found_Flag == 1) :
                                 if (Application_Type != 'None'):
@@ -82,6 +93,8 @@ def main():
                                     line_content = line_content.replace(line_content[Component_Start_in_line : Component_End_in_line + 13 ],'Data_Type/Application_Types/')
                                     #Write Done To Excel Sheet
                                     Write_Value_To_Cell(Sheet_object , row , Column + 10 , 'Done' )
+                                    #Color Cell with Green
+                                    Color_Cell_Green(Sheet_object , row , Column + 10)
                                     #Save WorkObject "Excel Sheet After Edits"
                                     Workbook_Object.save(excel_DataTypes)
                                     #Print Line in Console
@@ -139,6 +152,24 @@ def Copy_File_Content(src , dest):
                 F2.write(Line)
     F1.close()
     F2.close()
+
+#Color Cell With Red
+def Color_Cell_Red( sheet_object , Row , Column ):
+    redFill = PatternFill(start_color='FFFF0000', end_color='FFFF0000', fill_type='solid')
+    Cell = sheet_object.cell(row = Row , column = Column)
+    Cell.fill = redFill
+
+#Color Cell With Green
+def Color_Cell_Green( sheet_object , Row , Column ):
+    Green_Fill = PatternFill(start_color='00FF00', end_color='00FF00', fill_type='solid')
+    Cell = sheet_object.cell(row = Row , column = Column)
+    Cell.fill = Green_Fill
+#Color Cell With Yellow
+def Color_Cell_Yellow ( sheet_object , Row , Column ):
+    Yellow_Fill = PatternFill(start_color='FFFF00', end_color='FFFF00', fill_type='solid')
+    Cell = sheet_object.cell(row = Row , column = Column)
+    Cell.fill = Yellow_Fill
+
 
 if __name__ == '__main__':
     main()
