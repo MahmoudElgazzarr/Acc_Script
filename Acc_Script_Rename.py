@@ -23,6 +23,9 @@ SWC_Arxmls_Path = glob.glob(SWC_Arxmls)
 #add path that contain .xlsx file which have data type
 excel_DataTypes =  "D:/table_info_Data_Stage_B_PATH_3.xlsx"
 
+#Enter sheet name Here
+Sheet_Name = '2D_Tables'
+
 #Start Row
 Start_Row = 2
 
@@ -35,6 +38,15 @@ Line_End = '</TYPE-TREF>'
 
 #Global variable to hold column number
 Column = 0
+Column_Max_Number = 3
+#Colummn Max Number Depending on The Sheet Element if x,y or x,y,z
+#X , Y
+if Sheet_Name == '1D_Tables' :
+    Column_Max_Number = 3
+#X , Y , Z
+if Sheet_Name == '2D_Tables' :
+    Column_Max_Number = 4
+
 #Global Variable to hold row number
 row = 0
 
@@ -42,11 +54,11 @@ def main():
     #Load WorkBook
     Workbook_Object = Load_Workbook(excel_DataTypes)
     # workbook object is created , create Sheet object
-    Sheet_object = Load_Sheet(Workbook_Object , '1D_Tables')
+    Sheet_object = Load_Sheet(Workbook_Object , Sheet_Name )
     #get max numbers of rows
     maxmium_row = Get_Max_Row(Sheet_object) + 1
     #Todo Change to 4 in case of 3D Cals
-    for Column in range(1 , 3 ):
+    for Column in range(1 , Column_Max_Number ):
         for row in range(Start_Row , maxmium_row ) :
             #get Cal Parameters from excel sheet
             Cal_Name = Get_Value_Of_Cell(Sheet_object , row , Column )
