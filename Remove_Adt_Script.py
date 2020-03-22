@@ -8,32 +8,57 @@ import openpyxl
 
 
 #add folder that contain .arxml file 
-arxml_DataTypes =  "C:\DataTypes.arxml"
-
+arxml_DataTypes =  "D:\DataTypes.arxml"
 #add path that contain .xlsx file which have data type
-excel_DataTypes =  "C:/table_info_Data_Stage_B_PATH_3.xlsx"
-
+excel_DataTypes =  "D:/table_info_Data_Stage_B_PATH_3.xlsx"
 # workbook object is created 
 wb_obj = openpyxl.load_workbook(excel_DataTypes)
+#create Sheet object
+Sheet_object = wb_obj.get_sheet_by_name('1D_Tables')
+#get max numbers of rows
+maxmium_row = Sheet_object.max_row
+# workbook object is created 
+wb_obj = openpyxl.load_workbook(excel_DataTypes)
+#Column_Max_Number = 3
+Column_Max_Number = 3
+#Start_Row
+Start_Row = 1
+#Flag for DATA_TYPE_MAP_Line_Start_found
+DATA_TYPE_MAP_Line_Start_found = 0
+
+#The APPLICATION Datatype we are searching for start and end lines
+APPLICATION_Line_Start = '<APPLICATION-PRIMITIVE-DATA-TYPE'
+APPLICATION_Line_End = '</APPLICATION-PRIMITIVE-DATA-TYPE>'
+#Data type map tags
+DATA_TYPE_MAP_Line_Start = '<DATA-TYPE-MAP>'
+DATA_TYPE_MAP_Line_End = '</DATA-TYPE-MAP>'
 
 def main():
-    
+    for Column in range(1 , Column_Max_Number ):
+        for row in range(Start_Row , maxmium_row ) :
+            #get Cal Parameters from excel sheet
+            Cal_Name = Get_Value_Of_Cell(Sheet_object , row , Column )
+            with open(arxml_DataTypes,'r') as inFile:
+                #Get Line numbers - 1
+                for num_line, line_content in enumerate(inFile, 1):
+                    #Search for opening of Data-type-map opening tag
+                    if line_content.find(DATA_TYPE_MAP_Line_Start) != -1 :
+                        #if found set a flage 
+                        DATA_TYPE_MAP_Line_Start_found = 1
+
+                    if((line_content.find(Cal_Name) != -1) and (DATA_TYPE_MAP_Line_Start_found == 1)):
+                        print('found it')
 
 
 
 
+#Function that takes sheet object , ROW , Coulumn
+#Return value of a cell
+def Get_Value_Of_Cell(sheet_obj , row , column):
+    Cell_objj = sheet_obj.cell(row = row , column = column)
+    Cell_Value = str(Cell_objj.value)
+    return Cell_Value
 
-
-
-
-
-
-
-
-
-
-
-
-
+#Start App
 if __name__ == '__main__':
     main()
