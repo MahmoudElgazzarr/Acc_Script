@@ -16,7 +16,8 @@ wb_obj = openpyxl.load_workbook(excel_DataTypes)
 #create Sheet object
 Sheet_object = wb_obj.get_sheet_by_name('1D_Tables')
 #get max numbers of rows
-maxmium_row = Sheet_object.max_row
+#maxmium_row = Sheet_object.max_row
+maxmium_row = 5
 # workbook object is created 
 wb_obj = openpyxl.load_workbook(excel_DataTypes)
 #Column_Max_Number = 3
@@ -53,9 +54,11 @@ def main():
                     #if cal found
                     if((line_content.find(Cal_Name) != -1) and (DATA_TYPE_MAP_Line_Start_found == 1) and (line_content.find('<APPLICATION-DATA-TYPE-REF') != -1 )):
                         #Remove Adt_ and also _T From the Line
-                        line_content.replace('Adt_' , '')
-                        line_content.replace('_T' , '')
-                        print("Removing")
+                        Start_Adt = line_content.find('Adt_' + Cal_Name)
+                        lineline_content = line_content.replace(line_content[Start_Adt:Start_Adt+4], '')
+                        End_T = line_content.find('</APPLICATION-DATA-TYPE-REF>')
+                        line_content = line_content.replace(line_content[End_T - 2 : End_T], '')
+                        print(line_content)
                     #Remove Flage for closing flag
                     if line_content.find(DATA_TYPE_MAP_Line_End) != -1:
                         DATA_TYPE_MAP_Line_Start_found = 0
