@@ -57,7 +57,6 @@ def main():
                         #Remove Adt_ and also _T From the Line
                         Start_Adt = line_content.find('Adt_' + Cal_Name + '_T')
                         line_content = line_content.replace(line_content[Start_Adt : Start_Adt + 4], '')
-                        print(line_content)
                         End_T = line_content.find('_T</APPLICATION-DATA-TYPE-REF>')
                         line_content = line_content.replace(line_content[End_T : End_T + 2], '')
                         #Color the Cell
