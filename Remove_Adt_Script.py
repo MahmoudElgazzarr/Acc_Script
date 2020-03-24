@@ -57,14 +57,30 @@ def main():
                         #Remove Adt_ and also _T From the Line
                         Start_Adt = line_content.find('Adt_' + Cal_Name)
                         lineline_content = line_content.replace(line_content[Start_Adt:Start_Adt+4], '')
-                        End_T = line_content.find('</APPLICATION-DATA-TYPE-REF>')
-                        line_content = line_content.replace(line_content[End_T - 2 : End_T], '')
-                        print(line_content)
+                        End_T = line_content.find('_T</APPLICATION-DATA-TYPE-REF>')
+                        line_content = line_content.replace(line_content[End_T : End_T + 2], '')
+                        #Color the Cell
                         Color_Cell_Red( Sheet_object , row , Column + 11 )
+                        #print line
+                        print(line_content)
                     #Remove Flage for closing flag
                     if line_content.find(DATA_TYPE_MAP_Line_End) != -1:
                         DATA_TYPE_MAP_Line_Start_found = 0
                     #Edit Name itself
+                    if(line_content.find('<APPLICATION-PRIMITIVE-DATA-TYPE') != -1 ):
+                        #Found APPLICATION-PRIMITIVE Type , Set a flag
+                        APPLICATION_PRIMITIVE = 1
+                    if ((line_content.find(Cal_Name) != -1) and (APPLICATION_PRIMITIVE == 1)):
+                        #Edit Name itself
+                        line_content = '<SHORT-NAME>' + Cal_Name + '</SHORT-NAME>'
+                        #Color the Cell
+                        Color_Cell_Red( Sheet_object , row , Column + 12 )
+                        #Print Line Content
+                        print(line_content)
+                    #Closing Tag
+                    if line_content.find('</APPLICATION-PRIMITIVE-DATA-TYPE>') != -1:
+                        APPLICATION_PRIMITIVE = 0
+
                     #Write Line
                     new_file.write(line_content)
             #Close the File after Edits
