@@ -5,7 +5,8 @@
 
 import os
 import openpyxl
-
+from openpyxl.styles import Color, PatternFill, Font, Border
+from openpyxl.styles import colors
 
 #add folder that contain .arxml file 
 arxml_DataTypes =  "D:\DataTypes.arxml"
@@ -59,9 +60,11 @@ def main():
                         End_T = line_content.find('</APPLICATION-DATA-TYPE-REF>')
                         line_content = line_content.replace(line_content[End_T - 2 : End_T], '')
                         print(line_content)
+                        Color_Cell_Red( Sheet_object , row , Column + 11 )
                     #Remove Flage for closing flag
                     if line_content.find(DATA_TYPE_MAP_Line_End) != -1:
                         DATA_TYPE_MAP_Line_Start_found = 0
+                    #Edit Name itself
                     #Write Line
                     new_file.write(line_content)
             #Close the File after Edits
@@ -84,6 +87,12 @@ def Copy_File_Content(src , dest):
                 F2.write(Line)
     F1.close()
     F2.close()
+
+#Color Cell With Red
+def Color_Cell_Red( sheet_object , Row , Column ):
+    redFill = PatternFill(start_color='FFFF0000', end_color='FFFF0000', fill_type='solid')
+    Cell = sheet_object.cell(row = Row , column = Column)
+    Cell.fill = redFill
 
 #Start App
 if __name__ == '__main__':
