@@ -14,10 +14,10 @@ from openpyxl.styles import PatternFill
 #SW version 2.5
 
 #add folder that contain .arxml file 
-arxml_DataTypes =  "C:\DataTypes.arxml"
+arxml_DataTypes =  "D:/Workspaces/DAT2.1_Workspaces/RTE_Workspace/aptiv_sw/autosar_cfg/davinci/Config/Developer/DataTypes.arxml"
 
 #add path that contain .xlsx file which have data type
-excel_DataTypes =  "C:/table_info_Data_Stage_B_PATH_3.xlsx"
+excel_DataTypes =  "D:/table_info_Data_Stage_B_PATH_3.xlsx"
 
 # Create temp file to copy the arxmls, and edit in the new file 
 #data_index = arxml_DataTypes.find("\\")
