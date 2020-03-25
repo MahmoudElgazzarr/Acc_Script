@@ -21,8 +21,6 @@ Sheet_object = wb_obj.get_sheet_by_name('1D_Tables')
 #maxmium_row = Sheet_object.max_row
 maxmium_row = 3
 
-# workbook object is created 
-wb_obj = openpyxl.load_workbook(excel_DataTypes)
 #Column_Max_Number = 3
 Column_Max_Number = 3
 #Start_Row
@@ -62,7 +60,7 @@ def main():
                         #Save WorkObject "Excel Sheet After Edits"
                         wb_obj.save(excel_DataTypes)
                         #print line
-                        #print(line_content)
+                        print(line_content)
                     #Remove Flage for closing flag
                     if line_content.find(DATA_TYPE_MAP_Line_End) != -1:
                         DATA_TYPE_MAP_Line_Start_found = 0
@@ -80,7 +78,7 @@ def main():
                         #Save WorkObject "Excel Sheet After Edits"
                         wb_obj.save(excel_DataTypes)
                         #Print Line Content
-                        #print(line_content)
+                        print(line_content)
                     if line_content.find('Adt_' + Cal_Name + '_T</SHARED-AXIS-TYPE-REF>' ) != -1 and (APPLICATION_PRIMITIVE == 1)  :
                         line_content = line_content.replace('Adt_' + Cal_Name + '_T</SHARED-AXIS-TYPE-REF>', Cal_Name + '</SHARED-AXIS-TYPE-REF>')
                         print(line_content)
