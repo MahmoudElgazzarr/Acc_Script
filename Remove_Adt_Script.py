@@ -54,7 +54,7 @@ def main():
                     if((line_content.find('Adt_' + Cal_Name + '_T') != -1) and (DATA_TYPE_MAP_Line_Start_found == 1) and (line_content.find('<APPLICATION-DATA-TYPE-REF') != -1 )):
                         #Remove Adt_ and also _T From the Line
                         line_content = line_content.replace('Adt_' + Cal_Name + '_T', Cal_Name )
-                        #Color the Cell
+                        #Color the Cell 11 and 12
                         Write_Value_To_Cell(Sheet_object , row , Column + 11 , 'Deleted' )
                         Color_Cell_Green( Sheet_object , row , Column + 11 )
                         #Save WorkObject "Excel Sheet After Edits"
@@ -72,15 +72,18 @@ def main():
                         #Edit Name itself
                         #line_content = '<SHORT-NAME>' + Cal_Name + '</SHORT-NAME>\n'
                         line_content = line_content.replace('<SHORT-NAME>' + 'Adt_' + Cal_Name + '_T' + '</SHORT-NAME>', '<SHORT-NAME>' + Cal_Name + '</SHORT-NAME>')
-                        #Color the Cell
-                        Color_Cell_Red( Sheet_object , row , Column + 12 )
-                        Write_Value_To_Cell(Sheet_object , row , Column + 12 , 'Deleted' )
+                        #Color the Cell 13 and 14
+                        Color_Cell_Red( Sheet_object , row , Column + 13 )
+                        Write_Value_To_Cell(Sheet_object , row , Column + 13 , 'Deleted' )
                         #Save WorkObject "Excel Sheet After Edits"
                         wb_obj.save(excel_DataTypes)
                         #Print Line Content
                         print(line_content)
                     if line_content.find('Adt_' + Cal_Name + '_T</SHARED-AXIS-TYPE-REF>' ) != -1 and (APPLICATION_PRIMITIVE == 1)  :
                         line_content = line_content.replace('Adt_' + Cal_Name + '_T</SHARED-AXIS-TYPE-REF>', Cal_Name + '</SHARED-AXIS-TYPE-REF>')
+                        #Color Axis Cell
+                        Color_Cell_Red( Sheet_object , row , Column + 15 )
+                        Write_Value_To_Cell(Sheet_object , row , Column + 15 , 'Axis' )
                         print(line_content)
                     #Closing Tag
                     if line_content.find('</APPLICATION-PRIMITIVE-DATA-TYPE>') != -1:
