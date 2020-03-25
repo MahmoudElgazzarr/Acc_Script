@@ -9,7 +9,8 @@ from openpyxl.styles import Color, PatternFill, Font, Border
 from openpyxl.styles import colors
 
 #add folder that contain .arxml file 
-arxml_DataTypes =  "D:\DataTypes.arxml"
+arxml_DataTypes =  "D:/Workspaces/DAT2.1_Workspaces/RTE_Workspace/aptiv_sw/autosar_cfg/davinci/Config/Developer/DataTypes.arxml"
+new_Datatypes_arxml = "D:/Workspaces/DAT2.1_Workspaces/RTE_Workspace/aptiv_sw/autosar_cfg/davinci/Config/Developer/new_DataTypes.arxml"
 #add path that contain .xlsx file which have data type
 excel_DataTypes =  "D:/table_info_Data_Stage_B_PATH_3.xlsx"
 # workbook object is created 
@@ -17,7 +18,8 @@ wb_obj = openpyxl.load_workbook(excel_DataTypes)
 #create Sheet object
 Sheet_object = wb_obj.get_sheet_by_name('1D_Tables')
 #get max numbers of rows
-maxmium_row = Sheet_object.max_row
+#maxmium_row = Sheet_object.max_row
+maxmium_row = 3
 
 # workbook object is created 
 wb_obj = openpyxl.load_workbook(excel_DataTypes)
@@ -27,8 +29,6 @@ Column_Max_Number = 3
 Start_Row = 1
 #Flag for DATA_TYPE_MAP_Line_Start_found
 DATA_TYPE_MAP_Line_Start_found = 0
-
-new_Datatypes_arxml = 'D:/new_DataTypes.arxml'
 
 
 #The APPLICATION Datatype we are searching for start and end lines
@@ -53,18 +53,16 @@ def main():
                         #if found set a flage 
                         DATA_TYPE_MAP_Line_Start_found = 1
                     #if cal found
-                    if((line_content.find(Cal_Name) != -1) and (DATA_TYPE_MAP_Line_Start_found == 1) and (line_content.find('<APPLICATION-DATA-TYPE-REF') != -1 )):
+                    if((line_content.find('Adt_' + Cal_Name + '_T') != -1) and (DATA_TYPE_MAP_Line_Start_found == 1) and (line_content.find('<APPLICATION-DATA-TYPE-REF') != -1 )):
                         #Remove Adt_ and also _T From the Line
-                        Start_Adt = line_content.find('Adt_' + Cal_Name + '_T')
-                        line_content = line_content.replace(line_content[Start_Adt : Start_Adt + 4], '')
-                        End_T = line_content.find('_T</APPLICATION-DATA-TYPE-REF>')
-                        line_content = line_content.replace(line_content[End_T : End_T + 2], '')
+                        line_content = line_content.replace('Adt_' + Cal_Name + '_T', Cal_Name )
                         #Color the Cell
-                        Color_Cell_Red( Sheet_object , row , Column + 11 )
+                        Write_Value_To_Cell(Sheet_object , row , Column + 11 , 'Deleted' )
+                        Color_Cell_Green( Sheet_object , row , Column + 11 )
                         #Save WorkObject "Excel Sheet After Edits"
                         wb_obj.save(excel_DataTypes)
                         #print line
-                        print(line_content)
+                        #print(line_content)
                     #Remove Flage for closing flag
                     if line_content.find(DATA_TYPE_MAP_Line_End) != -1:
                         DATA_TYPE_MAP_Line_Start_found = 0
@@ -72,14 +70,19 @@ def main():
                     if(line_content.find('<APPLICATION-PRIMITIVE-DATA-TYPE') != -1 ):
                         #Found APPLICATION-PRIMITIVE Type , Set a flag
                         APPLICATION_PRIMITIVE = 1
-                    if ((line_content.find('<SHORT-NAME>' + 'Adt_' + Cal_Name + '_T' + '</SHORT-NAME>\n' ) != -1) and (APPLICATION_PRIMITIVE == 1)):
+                    if ((line_content.find('<SHORT-NAME>' + 'Adt_' + Cal_Name + '_T' + '</SHORT-NAME>' ) != -1) and (APPLICATION_PRIMITIVE == 1)):
                         #Edit Name itself
-                        line_content = '<SHORT-NAME>' + Cal_Name + '</SHORT-NAME>'
+                        #line_content = '<SHORT-NAME>' + Cal_Name + '</SHORT-NAME>\n'
+                        line_content = line_content.replace('<SHORT-NAME>' + 'Adt_' + Cal_Name + '_T' + '</SHORT-NAME>', '<SHORT-NAME>' + Cal_Name + '</SHORT-NAME>')
                         #Color the Cell
                         Color_Cell_Red( Sheet_object , row , Column + 12 )
+                        Write_Value_To_Cell(Sheet_object , row , Column + 12 , 'Deleted' )
                         #Save WorkObject "Excel Sheet After Edits"
                         wb_obj.save(excel_DataTypes)
                         #Print Line Content
+                        #print(line_content)
+                    if line_content.find('Adt_' + Cal_Name + '_T</SHARED-AXIS-TYPE-REF>' ) != -1 and (APPLICATION_PRIMITIVE == 1)  :
+                        line_content = line_content.replace('Adt_' + Cal_Name + '_T</SHARED-AXIS-TYPE-REF>', Cal_Name + '</SHARED-AXIS-TYPE-REF>')
                         print(line_content)
                     #Closing Tag
                     if line_content.find('</APPLICATION-PRIMITIVE-DATA-TYPE>') != -1:
@@ -113,6 +116,15 @@ def Color_Cell_Red( sheet_object , Row , Column ):
     redFill = PatternFill(start_color='FFFF0000', end_color='FFFF0000', fill_type='solid')
     Cell = sheet_object.cell(row = Row , column = Column)
     Cell.fill = redFill
+
+#Color Cell With Green
+def Color_Cell_Green( sheet_object , Row , Column ):
+    Green_Fill = PatternFill(start_color='00FF00', end_color='00FF00', fill_type='solid')
+    Cell = sheet_object.cell(row = Row , column = Column)
+    Cell.fill = Green_Fill
+#write value to any cell in the excel sheet
+def Write_Value_To_Cell(sheet_obj , row , column , value):
+    sheet_obj.cell(row = row , column = column).value = value
 
 #Start App
 if __name__ == '__main__':
