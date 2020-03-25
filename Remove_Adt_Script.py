@@ -18,8 +18,7 @@ wb_obj = openpyxl.load_workbook(excel_DataTypes)
 #create Sheet object
 Sheet_object = wb_obj.get_sheet_by_name('1D_Tables')
 #get max numbers of rows
-#maxmium_row = Sheet_object.max_row
-maxmium_row = 3
+maxmium_row = Sheet_object.max_row
 
 #Column_Max_Number = 3
 Column_Max_Number = 3
@@ -79,11 +78,13 @@ def main():
                         wb_obj.save(excel_DataTypes)
                         #Print Line Content
                         print(line_content)
-                    if line_content.find('Adt_' + Cal_Name + '_T</SHARED-AXIS-TYPE-REF>' ) != -1 and (APPLICATION_PRIMITIVE == 1)  :
+                    if line_content.find('Adt_' + Cal_Name + '_T</SHARED-AXIS-TYPE-REF>' ) != -1  :
                         line_content = line_content.replace('Adt_' + Cal_Name + '_T</SHARED-AXIS-TYPE-REF>', Cal_Name + '</SHARED-AXIS-TYPE-REF>')
                         #Color Axis Cell
                         Color_Cell_Red( Sheet_object , row , Column + 15 )
                         Write_Value_To_Cell(Sheet_object , row , Column + 15 , 'Axis' )
+                        #Save WorkObject "Excel Sheet After Edits"
+                        wb_obj.save(excel_DataTypes)
                         print(line_content)
                     #Closing Tag
                     if line_content.find('</APPLICATION-PRIMITIVE-DATA-TYPE>') != -1:
@@ -130,3 +131,5 @@ def Write_Value_To_Cell(sheet_obj , row , column , value):
 #Start App
 if __name__ == '__main__':
     main()
+#print message that we finished getting Application datatypes
+print("Finished Remvoing Adt _T ")
